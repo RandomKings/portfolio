@@ -57,12 +57,16 @@ const ComputersCanvas = () => {
     return <div>WebGL is not supported on this device or browser.</div>;
   }
 
+  if (isMobile) {
+    return null; // Do not render anything on mobile
+  }
+
   return (
     <Canvas
       frameloop='demand'
       shadows={false} // Disable shadows for better compatibility
-      dpr={isMobile ? [1, 1] : [1, 2]} // Lower dpr for mobile
-      camera={{ position: [20, 3, 5], fov: 30 }} // Adjust fov for better performance
+      dpr={[1, 2]} // Higher DPR for non-mobile devices
+      camera={{ position: [20, 3, 5], fov: 30 }} // Adjust camera for better performance
       gl={{
         antialias: false, // Disable antialiasing for performance
         alpha: true,
