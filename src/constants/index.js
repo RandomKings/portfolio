@@ -20,7 +20,7 @@ import {
   leafty_page,
   pokemon,
   survive_io,
-  tripguide,
+  particle,
 } from "../assets";
 
 export const navLinks = [
@@ -217,8 +217,8 @@ const projects = [
         color: "green-text-gradient",
       },
     ],
-    image: tripguide,
-    source_code_link: "https://github.com/",
+    image: particle,
+    source_code_link: "https://github.com/RandomKings/Paricle-Simulator.git",
   },
 ];
 

@@ -27,7 +27,7 @@ import leafty from "./company/leafty.svg";
 
 import leafty_page from "./leafty_page.png";
 import pokemon from "./pokemon.png";
-import tripguide from "./tripguide.png";
+import particle from "./particle.png";
 import survive_io	from "./survive_io.png";
 
 export {
@@ -54,8 +54,8 @@ export {
   mysql,
   leafty,
   leafty_page,
+  particle,
   pokemon,
-  tripguide,
   python,
   survive_io
 };
