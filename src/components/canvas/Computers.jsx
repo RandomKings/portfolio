@@ -5,7 +5,7 @@ import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
 import CanvasLoader from "../Loader";
 
 const Computers = ({ isMobile }) => {
-  const computer = useGLTF("./desktop_pc/scene.gltf");
+  const computer = useGLTF("./desktop_pc/scene.gltf"); // Use optimized GLB file
 
   return (
     <mesh>
@@ -14,15 +14,15 @@ const Computers = ({ isMobile }) => {
         position={[-20, 50, 10]}
         angle={0.12}
         penumbra={1}
-        intensity={1}
-        castShadow
-        shadow-mapSize={1024}
+        intensity={isMobile ? 0.5 : 1} // Reduce light intensity for mobile
+        castShadow={!isMobile} // Disable shadows for mobile
+        shadow-mapSize={isMobile ? 512 : 1024} // Lower shadow quality for mobile
       />
-      <pointLight intensity={1} />
+      <pointLight intensity={0.5} /> {/* Reduce intensity */}
       <primitive
         object={computer.scene}
-        scale={isMobile ? 0.7 : 0.75}
-        position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
+        scale={isMobile ? 0.6 : 0.75} // Adjust scale for mobile
+        position={isMobile ? [0, -3, -2.5] : [0, -3.25, -1.5]} // Adjust position for mobile
         rotation={[-0.01, -0.2, -0.1]}
       />
     </mesh>
@@ -31,35 +31,45 @@ const Computers = ({ isMobile }) => {
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [webglSupported, setWebglSupported] = useState(true);
 
   useEffect(() => {
-    // Add a listener for changes to the screen size
     const mediaQuery = window.matchMedia("(max-width: 500px)");
-
-    // Set the initial value of the `isMobile` state variable
     setIsMobile(mediaQuery.matches);
 
-    // Define a callback function to handle changes to the media query
     const handleMediaQueryChange = (event) => {
       setIsMobile(event.matches);
     };
 
-    // Add the callback function as a listener for changes to the media query
     mediaQuery.addEventListener("change", handleMediaQueryChange);
 
-    // Remove the listener when the component is unmounted
+    // Check for WebGL support
+    if (!window.WebGLRenderingContext || !document.createElement("canvas").getContext("webgl")) {
+      setWebglSupported(false);
+    }
+
     return () => {
       mediaQuery.removeEventListener("change", handleMediaQueryChange);
     };
   }, []);
 
+  if (!webglSupported) {
+    return <div>WebGL is not supported on this device or browser.</div>;
+  }
+
   return (
     <Canvas
       frameloop='demand'
-      shadows={isMobile ? false : true} // Disable shadows for mobile
-      dpr={isMobile ? [1, 1.5] : [1, 2]} // Lower dpr for mobile
-      camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: !isMobile }} // Disable preserveDrawingBuffer for mobile
+      shadows={false} // Disable shadows for better compatibility
+      dpr={isMobile ? [1, 1] : [1, 2]} // Lower dpr for mobile
+      camera={{ position: [20, 3, 5], fov: 30 }} // Adjust fov for better performance
+      gl={{
+        antialias: false, // Disable antialiasing for performance
+        alpha: true,
+        preserveDrawingBuffer: false, // Disable for better performance
+        onContextLost: (e) => console.error("WebGL Context Lost", e),
+        onError: (error) => console.error("WebGL Error", error),
+      }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
