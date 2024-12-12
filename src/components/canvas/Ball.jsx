@@ -36,16 +36,15 @@ const Ball = (props) => {
     </Float>
   );
 };
-
 const BallCanvas = ({ icon }) => {
   return (
     <Canvas
-      frameloop='demand'
+      frameloop="demand"
       dpr={[1, 2]}
       gl={{ preserveDrawingBuffer: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} />
+        <OrbitControls enableZoom={false} enableRotate={false} />
         <Ball imgUrl={icon} />
       </Suspense>
 
@@ -55,3 +54,4 @@ const BallCanvas = ({ icon }) => {
 };
 
 export default BallCanvas;
+

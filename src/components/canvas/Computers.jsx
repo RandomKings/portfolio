@@ -9,16 +9,17 @@ const Computers = ({ isMobile }) => {
 
   return (
     <mesh>
-      <hemisphereLight intensity={0.15} groundColor='black' />
+      {/* Optimized Lighting */}
+      <hemisphereLight intensity={0.1} groundColor="black" />
       <spotLight
         position={[-20, 50, 10]}
-        angle={0.12}
+        angle={0.15}
         penumbra={1}
-        intensity={1}
+        intensity={0.8} // Reduced intensity
         castShadow
-        shadow-mapSize={1024}
+        shadow-mapSize={512} // Reduced shadow resolution
       />
-      <pointLight intensity={1} />
+      <pointLight intensity={0.8} />
       <primitive
         object={computer.scene}
         scale={isMobile ? 0.7 : 0.75}
@@ -55,15 +56,16 @@ const ComputersCanvas = () => {
 
   return (
     <Canvas
-      frameloop='demand'
+      frameloop="demand"
       shadows
-      dpr={[1, 2]}
+      dpr={isMobile ? 1 : [1, 1.5]} // Lower dpr for better performance
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ preserveDrawingBuffer: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
           enableZoom={false}
+          enabled={!isMobile} // Disable controls on mobile
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
         />
